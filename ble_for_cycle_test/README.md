@@ -1,6 +1,7 @@
 # Flutter-BLE-study
 
 BLE로 받은 실시간 데이터를 DB에 저장
+
 기간: 2022.09.02~14
 
 ## COMMIT
