@@ -1,16 +1,9 @@
-# ble_for_cycle_test
+# Flutter-BLE-study
 
-A new Flutter project.
+BLE로 받은 실시간 데이터를 DB에 저장
+기간: 2022.09.02~14
 
-## Getting Started
+## COMMIT
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 09.14 09:39 CYCLEMODEl 삭제 -> total, speed 바로 분리하여 연결
+-

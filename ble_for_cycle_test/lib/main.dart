@@ -28,12 +28,12 @@ class _ESPTestState extends State<ESPTest> {
   final String SERVICE_UUID =           "82e5f314-f248-4c9d-b802-385aa7fcaf24";
   final String TARGET_DEVICE_NAME =     "CYCLE_TEST";
 
-  var cycleModel = CycleModel(total: 0, speed: 0).obs; // for safety
-
-  // ESPController의 역할
-  void espInit() {
-    cycleModel.value = CycleModel(total: 0, speed: 0);
-  }
+  // var cycleModel = CycleModel(total: 0, speed: 0).obs; // for safety
+  //
+  // // ESPController의 역할
+  // void espInit() {
+  //   cycleModel.value = CycleModel(total: 0, speed: 0);
+  // }
 
   // Obtain an instance for FlutterBlue
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
@@ -46,6 +46,10 @@ class _ESPTestState extends State<ESPTest> {
 
   String connectionText = "No connection";
   String receivedValue ="";
+
+  double speed = 0.0;
+  double total = 0.0;
+
 
   // Scan을 시작함 List에 넣기만 하는 함수.
   Future<void> startScan() async {
@@ -138,7 +142,9 @@ class _ESPTestState extends State<ESPTest> {
               receivedValue=value[0].toString(); // 캐리터리스틱을 통해 얻어온 값들을 가져오고
               // 1. value값을 String.fromCharCodes을 통해 정수형 배열을 문자열로 파싱
               // 2. CycleModel.fromString으로 total:0.0/speed:0.0을 변수 total과 speed에 각각 저장
-              cycleModel.value = CycleModel.fromString(String.fromCharCodes(value));
+              List<String> temp = String.fromCharCodes(value).split("/");
+              total = double.parse(temp[0].split(":")[1]);
+              speed = double.parse(temp[1].split(":")[1]);
               print("**[$receivedValue]**");
             }
             setState(() {}); // UI State에서 변경 사항이 있음을 Flutter Framework에 알려주는 역할을 함.UI에 변경된 값이 반영되도록 build 메소드가 다시 실행 UI 에 변경된 값이 반영될 수 있도록 build 메소드가 다시 실행
@@ -153,7 +159,7 @@ class _ESPTestState extends State<ESPTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BLE Connection Test'),//Text(connectionText),
+        title: const Text('Flutter BLE study'),
         actions: [
           IconButton(onPressed: () async {await startScan();}, icon: const Icon(Icons.search))
         ],
@@ -173,40 +179,12 @@ class _ESPTestState extends State<ESPTest> {
             children: <Widget>[
               const Text('Device Info:', style: TextStyle(color: Colors.black,fontSize: 20.0)),
               (isDevice) ?
-              Text('Device Name :[${targetDevice.name}]\nDevice total :[${cycleModel.value.total}]\nDevice speed :[${cycleModel.value.speed}]', style: const TextStyle(color: Colors.purple,fontSize: 20.0, fontWeight: FontWeight.bold))
+              Text('Device Name :[${targetDevice.name}]\nDevice total :[$total]\nDevice speed :[$speed]', style: const TextStyle(color: Colors.purple,fontSize: 20.0, fontWeight: FontWeight.bold))
                   : const Text('[No Device Info]', style: TextStyle(color: Colors.purple,fontSize: 20.0, fontWeight: FontWeight.bold))
             ],
           ),
         ],
       ),
     );
-  }
-}
-
-/// Cycle 모델 (CYCLE_TEST에서 주는 정보를 받아올 값)
-class CycleModel {
-  double total; // 총 운동 거리(km)
-  double speed; // 현재 속도(m/s)
-
-  CycleModel({
-    required this.total,
-    required this.speed,
-  });
-
-  factory CycleModel.fromString(String msg) {
-    // split : 일치하는 부분에서 문자열을 분할하고 pattern 하위 문자열 목록을 반환
-    List<String> splitMsg = msg.split("/");
-    return CycleModel(
-      total: double.parse(splitMsg[0].split(":")[1]),
-      speed: double.parse(splitMsg[1].split(":")[1]),
-    );
-  }
-
-  //String으로 변환하여 값을 내보냄
-  @override
-  String toString() {
-    return
-      '''[total]:$total [speed]:$speed
-''';
   }
 }
